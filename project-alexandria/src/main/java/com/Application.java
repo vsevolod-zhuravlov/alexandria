@@ -21,8 +21,7 @@ import java.util.List;
 public class Application {
     private JettyServer httpServer;
 
-    private static final String API_KEY = "7b175ee259644546b22793c7175e815a";
-    //private static final String PRIVATE_KEY = "0xb27a127aa3ed489dc63a66672f4bbd0e69596a6f731cb21313297c8a26016c01";
+    private static final String API_KEY = "";
 
 
     private static final String RPC_URL = "https://holesky.infura.io/v3/" + API_KEY; // Use your RPC provider
