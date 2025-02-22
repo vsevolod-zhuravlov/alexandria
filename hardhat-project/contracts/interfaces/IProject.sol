@@ -9,6 +9,8 @@ interface IProject  {
 
     event TaskSubmited(bytes32 indexed taskId, address indexed submiter);
 
+    event TaskConfirmedByConfirmer(bytes32 indexed taskId, address indexed submiter, address indexed confirmer);
+
     event TaskConfirmed(bytes32 indexed taskId, address indexed submiter);
 
     event DomainChanged(string indexed oldDomain, string indexed newDomain);

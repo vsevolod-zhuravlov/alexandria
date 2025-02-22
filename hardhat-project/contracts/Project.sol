@@ -224,8 +224,7 @@ contract Project is ERC721, ERC721URIStorage, AccessControl, IProject {
         return taskId;
     }
 
-    // when student submit task - this means that project owner can find file at URL: {domain}/projects/:projectAddress/tasks/:taskId/:studentAddress/file
-    // file projectAddress taskId myAddress
+    // when student submits task - this means that project owner can find file at URL: "{domain}/projects/:projectAddress/tasks/:taskId/:studentAddress"
 
     function submitTask(bytes32 _taskId) external isNotEnded onlyRole(STUDENT_ROLE) {
         require(taskExists[_taskId], TaskNotFound(_taskId));
@@ -249,7 +248,7 @@ contract Project is ERC721, ERC721URIStorage, AccessControl, IProject {
 
     function confirmTask(bytes32 _taskId, address _student) external isNotEnded lock onlyRole(CONFIRMER_ROLE) {
         require(taskExists[_taskId], TaskNotFound(_taskId));
-        require(!tasksConfirmers[_taskId][_student][_msgSender()], TaskAlreadyConfirmedByYou(_taskId)); // was bug
+        require(!tasksConfirmers[_taskId][_student][_msgSender()], TaskAlreadyConfirmedByYou(_taskId));
 
         TaskInfo memory currentTask = tasksInfo[_taskId];
         uint confirmDeadline = currentTask.deadline + currentTask.confirmDuration;
@@ -266,7 +265,9 @@ contract Project is ERC721, ERC721URIStorage, AccessControl, IProject {
         require(!taskConfirmed, TaskAlreadyConfirmed(_taskId));
 
         taskSubmitInfo.confirmations++;
-        tasksConfirmers[_taskId][_student][_msgSender()] = true; // was bug
+        tasksConfirmers[_taskId][_student][_msgSender()] = true;
+
+        emit TaskConfirmedByConfirmer(_taskId, _student, _msgSender());
 
         uint confirmationsRequired = currentTask.minConfirmations;
 
