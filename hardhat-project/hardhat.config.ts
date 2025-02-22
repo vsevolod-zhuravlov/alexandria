@@ -1,7 +1,6 @@
 import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
 import dotenv from "dotenv"
-import { string } from "hardhat/internal/core/params/argumentTypes";
 
 dotenv.config()
 

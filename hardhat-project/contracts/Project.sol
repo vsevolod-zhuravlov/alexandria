@@ -25,8 +25,8 @@ contract Project is ERC721, ERC721URIStorage, AccessControl, IProject {
     bytes32 constant CONFIRMER_ROLE = 0x2882d409365a50c684fae709d3db405f6fd025cd4d815228377ccc14efd8b57c; // keccak256("CONFIRMER_ROLE")
     bytes32 constant STUDENT_ROLE = 0x36a5c4aaacb6b388bbd448bf11096b7dafc5652bcc9046084fd0e95b1fb0b2cc; // keccak256("STUDENT_ROLE")
 
-    address[] public confirmers;
-    address[] public students;
+    address[] confirmers;
+    address[] students;
 
     struct SubmitInfo {
         bool isSubmited;
@@ -52,6 +52,7 @@ contract Project is ERC721, ERC721URIStorage, AccessControl, IProject {
     constructor(
         address projectOwner, 
         address[] memory _confirmers, 
+        address[] memory _students,
         string memory _projectName, 
         string memory _description,
         string memory _domain,
@@ -62,6 +63,10 @@ contract Project is ERC721, ERC721URIStorage, AccessControl, IProject {
     ) ERC721(_tokenName, _tokenSymbol) {
         require(_deadline >= block.timestamp + MIN_DURATION);
         require(_confirmers.length >= 2, MinTwoConfirmersAllowed(_confirmers.length));
+
+        if(isPublic_) {
+            require(_students.length == 0, InPublicStudentsJoinOnTheirOwn());
+        }
 
         projectName = _projectName;
         description = _description;
@@ -75,8 +80,20 @@ contract Project is ERC721, ERC721URIStorage, AccessControl, IProject {
 
         for(uint i = 0; i < _confirmers.length; i++) {
             address nextConfirmer = _confirmers[i];
-            _grantRole(CONFIRMER_ROLE, nextConfirmer);
+            require(nextConfirmer != address(0), ZeroAddressCannotHaveRole(CONFIRMER_ROLE));
+            bool success = _grantRole(CONFIRMER_ROLE, nextConfirmer);
+            require(success, AlreadyHaveRole(nextConfirmer, CONFIRMER_ROLE));
             confirmers.push(nextConfirmer);
+        }
+
+        if(!isPublic_) {
+            for(uint i = 0; i < _students.length; i++) {
+                address nextStudent = _students[i];
+                require(nextStudent != address(0), ZeroAddressCannotHaveRole(STUDENT_ROLE));
+                bool success = _grantRole(STUDENT_ROLE, nextStudent);
+                require(success, AlreadyHaveRole(nextStudent, STUDENT_ROLE));
+                students.push(nextStudent);
+            }
         }
     }
 
@@ -148,23 +165,17 @@ contract Project is ERC721, ERC721URIStorage, AccessControl, IProject {
 
     function join() external _isPublic isNotEnded {
         address student = _msgSender();
-        _grantRole(STUDENT_ROLE, student);
+        bool success = _grantRole(STUDENT_ROLE, student);
+        require(success, AlreadyHaveRole(student, STUDENT_ROLE));
         students.push(student);
     }
 
     // List Access:
 
     function addStudent(address _student) external _isListAccess isNotEnded onlyRole(DEFAULT_ADMIN_ROLE) {
-        _grantRole(STUDENT_ROLE, _student);
+        bool success = _grantRole(STUDENT_ROLE, _student);
+        require(success, AlreadyHaveRole(_student, STUDENT_ROLE));
         students.push(_student);
-    }
-
-    function addStudents(address[] calldata _students) external _isListAccess isNotEnded onlyRole(DEFAULT_ADMIN_ROLE) {
-        for(uint i = 0; i < _students.length; i++) {
-            address nextStudent = _students[i];
-            _grantRole(STUDENT_ROLE, nextStudent);
-            students.push(nextStudent);
-        }
     }
 
     // Tasks
@@ -214,6 +225,7 @@ contract Project is ERC721, ERC721URIStorage, AccessControl, IProject {
     }
 
     // when student submit task - this means that project owner can find file at URL: {domain}/projects/:projectAddress/tasks/:taskId/:studentAddress/file
+    // file projectAddress taskId myAddress
 
     function submitTask(bytes32 _taskId) external isNotEnded onlyRole(STUDENT_ROLE) {
         require(taskExists[_taskId], TaskNotFound(_taskId));
@@ -266,5 +278,13 @@ contract Project is ERC721, ERC721URIStorage, AccessControl, IProject {
         } else {
             tasksSubmits[_taskId][_student] = taskSubmitInfo;
         }
+    }
+
+    function getAllStudents() external view returns(address[] memory) {
+        return students;
+    }
+
+    function getAllConfirmers() external view returns(address[] memory) {
+        return confirmers;
     }
 }

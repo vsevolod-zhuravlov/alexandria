@@ -17,6 +17,8 @@ interface IProject  {
 
     error NotPublicProject();
 
+    error InPublicStudentsJoinOnTheirOwn();
+
     error NotListAccessProject();
 
     error Locked();
@@ -24,6 +26,10 @@ interface IProject  {
     error ProjectFinished(uint deadline);
 
     error InvalidDeadline(uint deadline);
+
+    error AlreadyHaveRole(address account, bytes32 role);
+
+    error ZeroAddressCannotHaveRole(bytes32 role);
 
     error MinTwoConfirmersAllowed(uint count);
 
