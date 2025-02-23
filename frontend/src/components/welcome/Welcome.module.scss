@@ -1,0 +1,64 @@
+@import "../../colors.scss";
+
+.welcome {
+    &__container {
+        max-width: 1400px;
+        height: 100%;
+        margin: 0 auto;
+        padding: 0 28px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    &__wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        gap: 100px;
+    }
+
+    &__image {
+        width: 700px;
+
+        img {
+            max-width: 100%;
+        }
+    }
+    
+    &__title {
+        font-size: 100px;
+        
+        &--big {
+            font-size: 120px;
+            color: $white;
+            background-color: $black;
+
+            &::selection {
+                color: $black;
+                background-color: $white;
+            }
+        }
+
+        &:not(:last-child) {
+            margin-bottom: 50px;
+        }
+    }
+
+    &__text {
+        color: $black;
+        font-size: 1.5rem;
+        max-width: 300px;
+
+        &:not(:last-child) {
+            margin-bottom: 50px;
+        }
+    }
+
+    &__connect-button {
+        font-size: 25px;
+        background-color: $black;
+        color: $white;
+        padding: 20px 40px;
+    }
+}

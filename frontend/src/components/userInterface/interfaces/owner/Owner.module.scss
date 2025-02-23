@@ -1,0 +1,42 @@
+@import "../../../../colors.scss";
+
+.dashboard {
+    width: 100%;
+    height: calc(100% - 54px);
+    padding: 50px 0;
+
+    &__container {
+        max-width: 1400px;
+        height: 100%;
+        margin: 0 auto;
+        padding: 0 28px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__tabs {
+        margin-bottom: 25px;
+    }
+
+    &__content {
+        flex-grow: 1;
+        background-color: gray;
+    }
+}
+
+.select-projects-button, .select-create-button {
+    width: 50%;
+    font-size: 25px;
+    border-radius: 0;
+    background-color: $gray;
+    color: $black;
+
+    &:hover {
+        color: $white;
+    }
+}
+
+.active {
+    color: $white;
+    background-color: $black;
+}
