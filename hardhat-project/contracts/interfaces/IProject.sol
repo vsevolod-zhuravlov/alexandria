@@ -17,6 +17,8 @@ interface IProject  {
 
     // Errors
 
+    error ErrorTryingAddProjectToStudent();
+
     error NotPublicProject();
 
     error InPublicStudentsJoinOnTheirOwn();
@@ -26,6 +28,8 @@ interface IProject  {
     error Locked();
 
     error ProjectFinished(uint deadline);
+
+    error ProjectNotFinished(uint deadline);
 
     error InvalidDeadline(uint deadline);
 
@@ -57,8 +61,6 @@ interface IProject  {
 
     error TaskAlreadyConfirmedByYou(bytes32 taskId);
 
-    function getTasks() external view returns(bytes32[] memory);
-
     function createTask(
         string calldata _name, 
         string calldata _description, 
@@ -71,4 +73,10 @@ interface IProject  {
     function confirmTask(bytes32 _taskId, address _student) external;
 
     function submitTask(bytes32 _taskId) external;
+
+    function getTasks() external view returns(bytes32[] memory);
+
+    function getStudents() external view returns(address[] memory);
+
+    function getConfirmers() external view returns(address[] memory);
 }

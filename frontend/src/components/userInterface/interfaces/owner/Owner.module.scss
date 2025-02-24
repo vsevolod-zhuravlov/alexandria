@@ -39,4 +39,8 @@
 .active {
     color: $white;
     background-color: $black;
+
+    &:hover {
+        background-color: $black;
+    }
 }

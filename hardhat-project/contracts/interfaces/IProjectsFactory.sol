@@ -3,6 +3,11 @@
 pragma solidity ^0.8.28;
 
 interface IProjectsFactory {
+
+    event ProjectCreated(address indexed project, address indexed creator);
+
+    error CallerIsNotProject(address caller);
+
     function create(
         address[] memory _confirmers, 
         address[] memory _students,
@@ -15,7 +20,11 @@ interface IProjectsFactory {
         bool isPublic
     ) external returns(address);
 
+    function addProjectToStudent(address _student) external;
+
     function getProjectsOfOwner(address _owner) external view returns(address[] memory);
 
-    function getProjectOfConfirmer(address _confirmer) external view returns(address[] memory);
+    function getProjectsOfConfirmer(address _confirmer) external view returns(address[] memory);
+
+    function getProjectsOfStudent(address _student) external view returns(address[] memory);
 }

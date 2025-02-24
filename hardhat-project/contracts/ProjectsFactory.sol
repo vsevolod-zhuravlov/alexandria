@@ -8,6 +8,14 @@ import {Project} from "./Project.sol";
 contract ProjectsFactory is IProjectsFactory {
     mapping(address => address[]) projectsOfOwner;
     mapping(address => address[]) projectsOfConfirmer;
+    mapping(address => address[]) projectsOfStudent;
+    mapping(address => bool) projects;
+
+    modifier onlyProject() {
+        address caller = msg.sender;
+        require(projects[caller], CallerIsNotProject(caller));
+        _;
+    }
 
     function create(
         address[] memory _confirmers,
@@ -35,20 +43,36 @@ contract ProjectsFactory is IProjectsFactory {
             isPublic
         ));
 
+        projects[newProjectAddress] = true;
         projectsOfOwner[projectOwner].push(newProjectAddress);
 
         for(uint i = 0; i < _confirmers.length; i++) {
             projectsOfConfirmer[_confirmers[i]].push(newProjectAddress);
         }
-        
+
+        if(!isPublic) {
+            for(uint i = 0; i < _students.length; i++) {
+                projectsOfStudent[_students[i]].push(newProjectAddress);
+            }
+        }
+
+        emit ProjectCreated(newProjectAddress, projectOwner);
         return newProjectAddress;
+    }
+
+    function addProjectToStudent(address _student) external onlyProject {
+        projectsOfStudent[_student].push(msg.sender);
     }
 
     function getProjectsOfOwner(address _owner) external view returns(address[] memory) {
         return projectsOfOwner[_owner];
     }
 
-    function getProjectOfConfirmer(address _confirmer) external view returns(address[] memory) {
+    function getProjectsOfConfirmer(address _confirmer) external view returns(address[] memory) {
         return projectsOfConfirmer[_confirmer];
+    }
+
+    function getProjectsOfStudent(address _student) external view returns(address[] memory) {
+        return projectsOfStudent[_student];
     }
 }

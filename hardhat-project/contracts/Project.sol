@@ -10,8 +10,12 @@ import {IProject} from "./interfaces/IProject.sol";
 contract Project is ERC721, ERC721URIStorage, AccessControl, IProject {
     string public projectName;
     string public description;
+    address public owner;
     string public domain;
     bool public isPublic;
+    bool public finished;
+
+    address factory;
 
     uint public immutable DEADLINE;
     uint public constant MIN_DURATION = 1 days;
@@ -22,8 +26,8 @@ contract Project is ERC721, ERC721URIStorage, AccessControl, IProject {
     string baseURI_;
     uint _nextTokenId;
 
-    bytes32 constant CONFIRMER_ROLE = 0x2882d409365a50c684fae709d3db405f6fd025cd4d815228377ccc14efd8b57c; // keccak256("CONFIRMER_ROLE")
-    bytes32 constant STUDENT_ROLE = 0x36a5c4aaacb6b388bbd448bf11096b7dafc5652bcc9046084fd0e95b1fb0b2cc; // keccak256("STUDENT_ROLE")
+    bytes32 constant public CONFIRMER_ROLE = 0x2882d409365a50c684fae709d3db405f6fd025cd4d815228377ccc14efd8b57c; // keccak256("CONFIRMER_ROLE")
+    bytes32 constant public STUDENT_ROLE = 0x36a5c4aaacb6b388bbd448bf11096b7dafc5652bcc9046084fd0e95b1fb0b2cc; // keccak256("STUDENT_ROLE")
 
     address[] confirmers;
     address[] students;
@@ -70,9 +74,11 @@ contract Project is ERC721, ERC721URIStorage, AccessControl, IProject {
 
         projectName = _projectName;
         description = _description;
+        owner = projectOwner;
         domain = _domain;
         DEADLINE = _deadline;
         isPublic = isPublic_;
+        factory = _msgSender();
 
         _grantRole(DEFAULT_ADMIN_ROLE, projectOwner);
         _grantRole(CONFIRMER_ROLE, projectOwner);
@@ -126,6 +132,14 @@ contract Project is ERC721, ERC721URIStorage, AccessControl, IProject {
         _setTokenURI(tokenId, uri);
     }
 
+    function addProjectToStudent(address _student) internal {
+        (bool success, ) = factory.call{value: 0}(
+            abi.encodeWithSignature("addProjectToStudent(address _student)", _student)
+        );
+
+        require(success, ErrorTryingAddProjectToStudent());
+    }
+
     function changeBaseURI(string calldata newBaseURI) external onlyRole(DEFAULT_ADMIN_ROLE) {
         baseURI_ = newBaseURI;
     }
@@ -168,6 +182,7 @@ contract Project is ERC721, ERC721URIStorage, AccessControl, IProject {
         bool success = _grantRole(STUDENT_ROLE, student);
         require(success, AlreadyHaveRole(student, STUDENT_ROLE));
         students.push(student);
+        addProjectToStudent(student);
     }
 
     // List Access:
@@ -176,6 +191,7 @@ contract Project is ERC721, ERC721URIStorage, AccessControl, IProject {
         bool success = _grantRole(STUDENT_ROLE, _student);
         require(success, AlreadyHaveRole(_student, STUDENT_ROLE));
         students.push(_student);
+        addProjectToStudent(_student);
     }
 
     // Tasks
@@ -281,11 +297,18 @@ contract Project is ERC721, ERC721URIStorage, AccessControl, IProject {
         }
     }
 
-    function getAllStudents() external view returns(address[] memory) {
+    function finishProject() external onlyRole(DEFAULT_ADMIN_ROLE) {
+        require(!finished, ProjectFinished(DEADLINE));
+        require(block.timestamp > DEADLINE, ProjectNotFinished(DEADLINE));
+
+        finished = true;
+    }
+
+    function getStudents() external view returns(address[] memory) {
         return students;
     }
 
-    function getAllConfirmers() external view returns(address[] memory) {
+    function getConfirmers() external view returns(address[] memory) {
         return confirmers;
     }
 }
