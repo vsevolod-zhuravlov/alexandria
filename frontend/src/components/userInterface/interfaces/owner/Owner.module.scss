@@ -1,11 +1,15 @@
 @import "../../../../colors.scss";
 
 .dashboard {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
     width: 100%;
-    height: calc(100% - 54px);
-    padding: 50px 0;
+    padding: 100px 0 50px 0;
 
     &__container {
+        flex-grow: 1;
+        width: 100%;
         max-width: 1400px;
         height: 100%;
         margin: 0 auto;
@@ -20,7 +24,9 @@
 
     &__content {
         flex-grow: 1;
-        background-color: gray;
+        background-color: $gray;
+        padding: 25px;
+        border-radius: 20px;
     }
 }
 
@@ -34,6 +40,16 @@
     &:hover {
         color: $white;
     }
+}
+
+.select-projects-button {
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+}
+
+.select-create-button {
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
 }
 
 .active {

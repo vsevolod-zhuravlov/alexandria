@@ -1,6 +1,8 @@
 import { useState, useEffect, createContext } from 'react'
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import './App.scss'
-import Home from "./pages/Home"
+import Header from './components/header/Header'
+import { Home, FullProject, CreateTask } from "./pages"
 import Preloader from "./components/preloader/Preloader"
 
 const initialState = {
@@ -31,15 +33,25 @@ function App() {
     startLoading()
   }, [])
 
-  return (
-    <>
-      {isLoading ? <Preloader /> : 
+  function _resetState() {
+    setGlobalState(initialState)
+  }
 
+  const isAuthorized = globalState.selectedAccount && globalState.selectedRole
+
+  return (
+    <Router>
+      {isLoading ? <Preloader /> : 
         <Context.Provider value={[globalState, setGlobalState]}>
-          <Home />
+          {isAuthorized ? <Header disconnect={_resetState} /> : <></>}
+          <Routes>
+            <Route path="/" element={<Home />}/>
+            <Route path="/projects/:projectAddress" element={<FullProject />}/>
+            <Route path="/projects/:projectAddress/create-task" element={<CreateTask />}/>
+          </Routes>
         </Context.Provider>
       }
-    </>
+    </Router>
   )
 }
 

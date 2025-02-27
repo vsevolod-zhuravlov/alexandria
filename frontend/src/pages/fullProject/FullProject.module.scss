@@ -1,0 +1,82 @@
+@import "../../colors.scss";
+
+.full-project {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+    padding: 100px 0 50px 0;
+    font-size: 30px;
+
+    &__container {
+        flex-grow: 1;
+        width: 100%;
+        max-width: 1400px;
+        height: 100%;
+        margin: 0 auto;
+        padding: 0 28px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__name {
+        font-size: 50px;
+    }
+
+    &__description {
+    }
+
+    &__info {
+        &:not(:last-child) {
+            margin-bottom: 50px;
+        }
+    }
+
+    &__tasks {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+.tasks {
+    background-color: $gray;
+    border-radius: 20px;
+    overflow: hidden;
+
+    &__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: $black;
+        color: $white;
+        padding: 10px 20px;
+    }
+
+    &__create-button {
+        color: $black;
+        background-color: $white;
+        padding: 5px 20px;
+        border-radius: 20px;
+        border: 1px solid $white;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.25s;
+
+        &:hover {
+           background-color: $black;
+           color: $white;
+        }
+    }
+
+    &__content {
+        padding: 10px 20px;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+    }
+
+    &__not-found {
+        margin: auto;
+    }
+}

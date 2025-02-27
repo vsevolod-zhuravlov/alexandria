@@ -66,7 +66,7 @@ function CreateProject() {
             const _confirmers = JSON.parse(confirmers)
             const _students = JSON.parse(students)
             const _deadline = BigInt(deadline)
-            const _isPublic = isPublic === "true";
+            const _isPublic = isPublic === "true"
 
             const projectsFactory = globalState.factory
             
@@ -86,7 +86,7 @@ function CreateProject() {
 
             const receipt = await tx.wait()
             const rawAddress = receipt.logs[8].topics[1]
-            const projectAddress = ethers.getAddress("0x" + rawAddress.slice(-40));
+            const projectAddress = ethers.getAddress("0x" + rawAddress.slice(-40))
 
             setProjectAddress(projectAddress)
             setStatus("created")
@@ -126,7 +126,7 @@ function CreateProject() {
                         </div>
                         <div className={styles["create-project__group"]}>
                             <label className={styles["create-project__label"]}>Is Public</label>
-                            <input onChange={(e) => setIsPublic(e.target.value)} type="text" name="isPublic" className={styles["create-project__input"]} />
+                            <input onChange={(e) => setIsPublic(e.target.value)} type="text" name="isPublic" placeholder="Enter true or false" className={styles["create-project__input"]} />
                         </div>
                         <div className={styles["create-project__group"]}>
                             <label className={styles["create-project__label"]}>Confirmers</label>

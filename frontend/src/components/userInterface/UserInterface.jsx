@@ -3,17 +3,17 @@ import Owner from "./interfaces/owner/Owner"
 import Confirmer from "./interfaces/confirmer/Confirmer"
 
 function UserInterface({ role }) {
-    if (role == "Student") {
-        return (
-            <Student/>
-        )
-    } else if (role == "Project Owner") {
+    if (role == "Project Owner") {
         return (
             <Owner/>
         )
     } else if (role == "Confirmer") {
         return (
             <Confirmer/>
+        )
+    } else if (role == "Student") {
+        return (
+            <Student/>
         )
     } else {
         return (

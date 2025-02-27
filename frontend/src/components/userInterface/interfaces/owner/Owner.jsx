@@ -1,6 +1,7 @@
 import styles from './Owner.module.scss';
 import { useState } from 'react';
 import CreateProject from '../../../projects/create/CreateProject'
+import MyProjects from '../../../projects/my/MyProjects'
 
 function Owner() {
     const [mode, setMode] = useState("projects");
@@ -32,8 +33,8 @@ function Owner() {
                         Create
                     </button>
                 </div>
-                <div className={styles["dashboard__content"]}>
-                    {mode === "projects" ? <div>Projects Content</div> : <CreateProject />}
+                <div className={`${styles["dashboard__content"]} ${mode === "projects" ? styles["scroll"] : ""}`}>
+                    {mode === "projects" ? <MyProjects/> : <CreateProject/>}
                 </div>
             </div>
         </div>

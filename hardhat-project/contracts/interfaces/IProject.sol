@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.28;
 
-interface IProject  {
+interface IProject {
     // Events
 
     event TaskCreated(bytes32 indexed taskId, string indexed name);

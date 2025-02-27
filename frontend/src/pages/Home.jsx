@@ -1,30 +1,28 @@
+import { useContext } from "react"
 import { ethers } from "ethers"
-
-import Header from "../components/header/Header"
 import Welcome from "../components/welcome/Welcome"
 import SelectRole from "../components/selectRole/SelectRole"
 import NetworkErrorMessage from "../components/networkError/NetworkErrorMessage"
-import factoryContract from "../contracts/factory.json"
 import UserInterface from "../components/userInterface/UserInterface"
-// import projectContract from "../contracts/project.json"
-
-import { useContext } from "react"
 import { Context } from "../App"
+import factoryContract from "../contracts/factory.json"
 
 const HOLESKY_NETWORK_ID = "17000"
+const HARDHAT_NETWORK_ID = "31337"
 // const ERROR_CODE_TX_REJECTED_BY_USER = 4001
 
-export default function Home() {
+export function Home() {
     const [globalState, setGlobalState] = useContext(Context)
     
     function _checkNetwork() {
-        if (window.ethereum.networkVersion === HOLESKY_NETWORK_ID) { return true }
+        console.log(window.ethereum.networkVersion)
+        if (window.ethereum.networkVersion === HARDHAT_NETWORK_ID) { return true }
 
-        console.error("Wrong network. Connect to Ethereum Holesky")
+        console.error("Wrong network. Connect to Hardhat network")
 
         setGlobalState({
             ...globalState, 
-            networkError: "Wrong network. Connect to Ethereum Holesky"
+            networkError: "Wrong network. Connect to Hardhat network"
         })
 
         return false
@@ -50,24 +48,6 @@ export default function Home() {
             factoryContract.abi,
             await provider.getSigner()
         );
-
-        // try {
-        //     const projects = await projectsFactory.getProjectsOfOwner(selectedAddress)
-        //     console.log(projects[0])
-
-        //     const project = new ethers.Contract(
-        //         "0xBeB30ef04228DfC1fFDBa6c57c5fB4aD701b26e7",
-        //         projectContract.abi,
-        //         await provider.getSigner()
-        //     )
-
-        //     const taskId = "0x2882d409365a50c684fae709d3db405f6fd025cd4d815228377ccc14efd8b57c"
-        //     const isConfirmed = await project.tasksConfirmers(taskId, selectedAddress, selectedAddress)
-
-        //     console.log(isConfirmed)
-        // } catch (err) {
-        //     console.log(err)
-        // }
 
         setGlobalState({
             ...globalState, 
@@ -109,7 +89,6 @@ export default function Home() {
             return
         }
 
-        console.log(globalState)
         _initialize(selectedAddress)
 
         window.ethereum.on("accountsChanged", ([newAddress]) => {
@@ -155,11 +134,7 @@ export default function Home() {
                                         networkError={globalState.networkError}
                                         dismiss={_dismissNetworkError}
                                     /> :
-
-                                    <>
-                                        <Header disconnect={_resetState} />
-                                        <UserInterface role={globalState.selectedRole}/>
-                                    </>
+                                    <UserInterface role={globalState.selectedRole}/>
                                 }
                             </>
                         }

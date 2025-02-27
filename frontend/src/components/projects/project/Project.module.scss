@@ -1,0 +1,28 @@
+@import "../../../colors.scss";
+
+.project {
+    display: block;
+    padding: 20px;
+    margin: 20px;
+    background-color: $black;
+    color: $white;
+    border-radius: 20px;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        color: $white;
+        background-color: $hover;
+    }
+
+    &__name {
+
+    }
+
+    &__description {
+
+    }
+
+    &__deadline {
+
+    }
+}
