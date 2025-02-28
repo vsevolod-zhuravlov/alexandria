@@ -1,14 +1,15 @@
 import { useState, useEffect, createContext } from 'react'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import { ethers } from "ethers"
 import './App.scss'
 import Header from './components/header/Header'
 import { Home, FullProject, CreateTask } from "./pages"
 import Preloader from "./components/preloader/Preloader"
 
 const initialState = {
+  publicProvider: new ethers.JsonRpcProvider("https://ethereum-holesky-rpc.publicnode.com"),
   provider: null,
   factory: null,
-  currentProject: null,
   selectedAccount: null,
   selectedRole: null,
   txBeingSent: null,

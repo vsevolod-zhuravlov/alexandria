@@ -18,14 +18,19 @@ export function FullProject() {
     const [deadline, setDeadline] = useState(0)
     const [tasks, setTasks] = useState([])
 
+    const isConnected = globalState.selectedAccount
+
     useEffect(() => {
         const loadFullProjectData = async () => {
             try {
-                const signer = await provider.getSigner();
+                const publicProvider = globalState.publicProvider
+                console.log(publicProvider)
+                const signerOrProvider = isConnected ? await provider.getSigner() : publicProvider
+
                 const fullProject = new ethers.Contract(
                     projectAddress,
                     projectContract.abi,
-                    signer
+                    signerOrProvider
                 )
 
                 setCurrentProject(fullProject)
@@ -61,7 +66,7 @@ export function FullProject() {
                     <div className={`${styles["full-project__tasks"]} ${styles["tasks"]}`}>
                         <div className={styles["tasks__header"]}>
                             <div className={styles["tasks__title"]}>Tasks:</div>
-                            <Link to={`/projects/${projectAddress}/create-task`} className={styles["tasks__create-button"]}>Create New</Link>
+                            {isConnected ? <Link to={`/projects/${projectAddress}/create-task`} className={styles["tasks__create-button"]}>Create New</Link> : <></>}
                         </div>
                         <div className={styles["tasks__content"]}>
                             {

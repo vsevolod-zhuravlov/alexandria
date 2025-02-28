@@ -16,13 +16,13 @@ export function Home() {
     
     function _checkNetwork() {
         console.log(window.ethereum.networkVersion)
-        if (window.ethereum.networkVersion === HARDHAT_NETWORK_ID) { return true }
+        if (window.ethereum.networkVersion === HOLESKY_NETWORK_ID) { return true }
 
-        console.error("Wrong network. Connect to Hardhat network")
+        console.error("Wrong network. Connect to Ethereum Holesky")
 
         setGlobalState({
             ...globalState, 
-            networkError: "Wrong network. Connect to Hardhat network"
+            networkError: "Wrong network. Connect to Ethereum Holesky"
         })
 
         return false
@@ -50,15 +50,16 @@ export function Home() {
         );
 
         setGlobalState({
-            ...globalState, 
-            selectedAccount: selectedAddress,
+            ...globalState,
             provider: provider,
-            factory: projectsFactory
+            factory: projectsFactory,
+            selectedAccount: selectedAddress,
         }, await updateBalance(provider, selectedAddress))
     }
 
     function _resetState() {
         setGlobalState({
+            publicProvider: null,
             provider: null,
             factory: null,
             currentProject: null,
