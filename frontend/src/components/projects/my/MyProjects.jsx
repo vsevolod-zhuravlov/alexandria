@@ -3,7 +3,6 @@ import { useState, useContext, useEffect } from 'react'
 import { Context } from "../../../App"
 import Project from '../project/Project'
 
-
 function MyProjects() {
     const [globalState, setGlobalState] = useContext(Context)
     const [projects, setProjects] = useState([])

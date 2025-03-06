@@ -5,17 +5,19 @@ import './App.scss'
 import Header from './components/header/Header'
 import { Home, FullProject, CreateTask } from "./pages"
 import Preloader from "./components/preloader/Preloader"
+import factoryContract from "./contracts/factory.json"
+
+const _selectedAccount = localStorage.getItem("selectedAccount")
+const _selectedRole = localStorage.getItem("selectedRole")
 
 const initialState = {
   publicProvider: new ethers.JsonRpcProvider("https://ethereum-holesky-rpc.publicnode.com"),
   provider: null,
   factory: null,
-  selectedAccount: null,
-  selectedRole: null,
-  txBeingSent: null,
+  selectedAccount: _selectedAccount,
+  selectedRole: _selectedRole,
   networkError: null,
-  transactionError: null,
-  balance: BigInt(0),
+  balance: BigInt(0)
 };
 
 export const Context = createContext()
@@ -25,10 +27,23 @@ function App() {
   const [globalState, setGlobalState] = useState(initialState)
 
   useEffect(() => {
-    const startLoading = () => {
+    const startLoading = async () => {
       setTimeout(() => {
         setIsLoading(false)
       }, 1000);
+
+      const provider = new ethers.BrowserProvider(window.ethereum)
+      const projectsFactory = new ethers.Contract(
+        factoryContract.address,
+        factoryContract.abi,
+        await provider.getSigner()
+      )
+
+      setGlobalState({
+        ...globalState,
+        provider: provider,
+        factory: projectsFactory
+      })
     }
 
     startLoading()

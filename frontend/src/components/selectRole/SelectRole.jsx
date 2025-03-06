@@ -24,6 +24,8 @@ function SelectRole({networkError, dismiss}) {
             ...globalState,
             selectedRole: role
         })
+
+        localStorage.setItem("selectedRole", role)
     }
 
     return (

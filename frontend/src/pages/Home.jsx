@@ -47,7 +47,7 @@ export function Home() {
             factoryContract.address,
             factoryContract.abi,
             await provider.getSigner()
-        );
+        )
 
         setGlobalState({
             ...globalState,
@@ -55,6 +55,8 @@ export function Home() {
             factory: projectsFactory,
             selectedAccount: selectedAddress,
         }, await updateBalance(provider, selectedAddress))
+
+        localStorage.setItem("selectedAccount", selectedAddress)
     }
 
     function _resetState() {

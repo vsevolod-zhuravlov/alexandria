@@ -38,7 +38,7 @@ function Owner() {
                 </div>
             </div>
         </div>
-    );
+    )
 }
 
-export default Owner;
+export default Owner
